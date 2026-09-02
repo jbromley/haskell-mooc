@@ -9,7 +9,6 @@
 --  * take, drop
 --  * length
 --  * null
-
 module Set2a where
 
 import Mooc.Todo
@@ -20,10 +19,8 @@ import Data.List
 ------------------------------------------------------------------------------
 -- Ex 1: Define the constant years, that is a list of the values 1982,
 -- 2004 and 2020 in this order.
-
 years :: [Int]
 years = [1982, 2004, 2020]
-
 
 ------------------------------------------------------------------------------
 -- Ex 2: define the function takeFinal, which returns the n last
@@ -32,11 +29,11 @@ years = [1982, 2004, 2020]
 -- If the list is shorter than n, return all elements.
 --
 -- Hint! remember the take and drop functions.
-
 takeFinal :: Int -> [a] -> [a]
-takeFinal n xs = if length xs > n
-                 then drop (length xs - n) xs
-                 else xs
+takeFinal n xs =
+  if length xs > n
+    then drop (length xs - n) xs
+    else xs
 
 ------------------------------------------------------------------------------
 -- Ex 3: Update an element at a certain index in a list. More
@@ -48,9 +45,8 @@ takeFinal n xs = if length xs > n
 -- Examples:
 --   updateAt 0 4 [1,2,3]   ==>  [4,2,3]
 --   updateAt 2 0 [4,5,6,7] ==>  [4,5,0,7]
-
 updateAt :: Int -> a -> [a] -> [a]
-updateAt i x xs = take i xs ++ [x] ++ drop (length xs - i) xs
+updateAt i x xs = take i xs ++ [x] ++ drop (i + 1) xs
 
 ------------------------------------------------------------------------------
 -- Ex 4: substring i j s should return the substring of s starting at
@@ -62,7 +58,6 @@ updateAt i x xs = take i xs ++ [x] ++ drop (length xs - i) xs
 --   substring 2 5 "abcdefgh"  ==>  "cde"
 --   substring 2 2 "abcdefgh"  ==>  ""
 --   substring 0 4 "abcdefgh"  ==>  "abcd"
-
 substring :: Int -> Int -> String -> String
 substring i j s = take (j - i) $ drop i s
 
@@ -77,7 +72,6 @@ substring i j s = take (j - i) $ drop i s
 --   isPalindrome "ABBA"     ==>  True
 --   isPalindrome "racecar"  ==>  True
 --   isPalindrome "AB"       ==>  False
-
 isPalindrome :: String -> Bool
 isPalindrome str = str == (reverse str)
 
@@ -91,7 +85,6 @@ isPalindrome str = str == (reverse str)
 --   palindromify "aaay" ==> "aa"
 --   palindromify "xabbay" ==> "abba"
 --   palindromify "abracacabra" ==> "acaca"
-
 palindromify :: String -> String
 palindromify s
   | null s = ""
@@ -107,7 +100,6 @@ palindromify s
 -- Examples:
 --   safeDiv 4 2  ==> Just 2
 --   safeDiv 4 0  ==> Nothing
-
 safeDiv :: Integer -> Integer -> Maybe Integer
 safeDiv _ 0 = Nothing
 safeDiv x y = Just (div x y)
@@ -120,7 +112,6 @@ safeDiv x y = Just (div x y)
 -- Examples:
 --   greet "John" Nothing         ==> "Hello, John!"
 --   greet "John" (Just "Smith")  ==> "Hello, John Smith!"
-
 greet :: String -> Maybe String -> String
 greet first Nothing = "Hello, " ++ first ++ "!"
 greet first (Just last) = "Hello, " ++ first ++ " " ++ last ++ "!"
@@ -137,10 +128,9 @@ greet first (Just last) = "Hello, " ++ first ++ " " ++ last ++ "!"
 --   safeIndex [10,20,30] 2        ==> Just 30
 --   safeIndex [10,20,30] 3        ==> Nothing
 --   safeIndex ["a","b","c"] (-1)  ==> Nothing
-
 safeIndex :: [a] -> Int -> Maybe a
 safeIndex xs i
-  | i < length xs = Just (xs !! i)
+  | 0 <= i && i < length xs = Just (xs !! i)
   | otherwise = Nothing
 
 ------------------------------------------------------------------------------
@@ -151,7 +141,7 @@ safeIndex xs i
 --   eitherDiv 4 2   ==> Right 2
 --   eitherDiv 4 0   ==> Left "4/0"
 eitherDiv :: Integer -> Integer -> Either String Integer
-eitherDiv x 0 = Left (show x ++ " / 0")
+eitherDiv x 0 = Left (show x ++ "/0")
 eitherDiv x y = Right (x `div` y)
 
 ------------------------------------------------------------------------------
@@ -167,7 +157,6 @@ eitherDiv x y = Right (x `div` y)
 --   addEithers (Right 1) (Right 2) ==> Right 3
 --   addEithers (Right 1) (Left "fail") ==> Left "fail"
 --   addEithers (Left "boom") (Left "fail") ==> Left "boom"
-
 addEithers :: Either String Int -> Either String Int -> Either String Int
 addEithers (Left l) _ = Left l
 addEithers _ (Left r) = Left r
