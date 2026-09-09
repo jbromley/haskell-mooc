@@ -83,7 +83,9 @@ myGcd a b =
 -- * you can combine strings with the ++ operator.
 -- * you can compute the length of a string with the length function
 leftpad :: String -> Int -> String
-leftpad = todo
+leftpad s n = if length s >= n then s
+                               else leftpad (" " ++ s) n
+
 
 ------------------------------------------------------------------------------
 -- Ex 5: let's make a countdown for a rocket! Given a number, you
@@ -98,7 +100,11 @@ leftpad = todo
 -- * you can use the show function to convert a number into a string
 -- * you'll probably need a recursive helper function
 countdown :: Integer -> String
-countdown = todo
+countdown n = countdown' n "Ready! "
+
+countdown' :: Integer -> String -> String
+countdown' 0 s = s ++ "Liftoff!"
+countdown' n s = countdown' (n - 1) (s ++ show n ++ "... ")
 
 ------------------------------------------------------------------------------
 -- Ex 6: implement the function smallestDivisor that returns the
@@ -115,7 +121,11 @@ countdown = todo
 --
 -- Hint: remember the mod function!
 smallestDivisor :: Integer -> Integer
-smallestDivisor = todo
+smallestDivisor n = smallestDivisor' n 2
+
+smallestDivisor' :: Integer -> Integer -> Integer
+smallestDivisor' n k = if n `mod` k == 0 then k
+                                         else smallestDivisor' n (k + 1)
 
 ------------------------------------------------------------------------------
 -- Ex 7: implement a function isPrime that checks if the given number
@@ -123,7 +133,7 @@ smallestDivisor = todo
 --
 -- Ps. 0 and 1 are not prime numbers
 isPrime :: Integer -> Bool
-isPrime = todo
+isPrime n = smallestDivisor n == n
 
 ------------------------------------------------------------------------------
 -- Ex 8: implement a function biggestPrimeAtMost that returns the
