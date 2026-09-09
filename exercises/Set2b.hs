@@ -14,9 +14,11 @@ import Data.List
 --   B(0,k) = 0, when k>0
 --
 -- Hint! pattern matching is your friend.
-
 binomial :: Integer -> Integer -> Integer
-binomial = todo
+binomial _ 0 = 1
+binomial n k
+  | n == 0 && k > 0 = 0
+  | otherwise = binomial (n - 1) k + binomial (n - 1) (k - 1)
 
 ------------------------------------------------------------------------------
 -- Ex 2: implement the odd factorial function. Odd factorial is like
@@ -25,9 +27,12 @@ binomial = todo
 -- Examples:
 --   oddFactorial 7 ==> 7*5*3*1 ==> 105
 --   oddFactorial 6 ==> 5*3*1 ==> 15
-
 oddFactorial :: Integer -> Integer
-oddFactorial = todo
+oddFactorial 1 = 1
+oddFactorial n =
+  if odd n
+    then n * oddFactorial (n - 2)
+    else oddFactorial (n - 1)
 
 ------------------------------------------------------------------------------
 -- Ex 3: implement the Euclidean Algorithm for finding the greatest
@@ -57,9 +62,13 @@ oddFactorial = todo
 --
 -- Background reading:
 -- * https://en.wikipedia.org/wiki/Euclidean_algorithm
-
 myGcd :: Integer -> Integer -> Integer
-myGcd = todo
+myGcd 0 b = b
+myGcd a 0 = a
+myGcd a b =
+  if a > b
+    then myGcd (a - b) b
+    else myGcd a (b - a)
 
 ------------------------------------------------------------------------------
 -- Ex 4: Implement the function leftpad which adds space characters
@@ -73,7 +82,6 @@ myGcd = todo
 -- Tips:
 -- * you can combine strings with the ++ operator.
 -- * you can compute the length of a string with the length function
-
 leftpad :: String -> Int -> String
 leftpad = todo
 
@@ -89,7 +97,6 @@ leftpad = todo
 -- * you can combine strings with the ++ operator
 -- * you can use the show function to convert a number into a string
 -- * you'll probably need a recursive helper function
-
 countdown :: Integer -> String
 countdown = todo
 
@@ -107,7 +114,6 @@ countdown = todo
 -- remember this in the next exercise!
 --
 -- Hint: remember the mod function!
-
 smallestDivisor :: Integer -> Integer
 smallestDivisor = todo
 
@@ -116,7 +122,6 @@ smallestDivisor = todo
 -- is a prime number. Use the function smallestDivisor.
 --
 -- Ps. 0 and 1 are not prime numbers
-
 isPrime :: Integer -> Bool
 isPrime = todo
 
@@ -131,6 +136,5 @@ isPrime = todo
 -- Examples:
 --   biggestPrimeAtMost 3 ==> 3
 --   biggestPrimeAtMost 10 ==> 7
-
 biggestPrimeAtMost :: Integer -> Integer
 biggestPrimeAtMost = todo
