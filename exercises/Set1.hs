@@ -28,7 +28,7 @@ two = 2
 ------------------------------------------------------------------------------
 -- Ex 2: define the function double of type Integer->Integer. Double
 -- should take one argument and return it multiplied by two.
-double :: Integer -> Integer
+Double :: Integer -> Integer
 double x = 2 * x
 
 ------------------------------------------------------------------------------
@@ -107,7 +107,8 @@ postagePrice' w =
 --
 -- Ps. remember, the type of booleans in haskell is Bool
 isZero :: Integer -> Bool
-isZero n = n == 0
+isZero 0 = True
+isZero _ = False
 
 ------------------------------------------------------------------------------
 -- Ex 9: implement using recursion a function sumTo such that
