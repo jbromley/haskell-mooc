@@ -83,9 +83,10 @@ myGcd a b =
 -- * you can combine strings with the ++ operator.
 -- * you can compute the length of a string with the length function
 leftpad :: String -> Int -> String
-leftpad s n = if length s >= n then s
-                               else leftpad (" " ++ s) n
-
+leftpad s n =
+  if length s >= n
+    then s
+    else leftpad (" " ++ s) n
 
 ------------------------------------------------------------------------------
 -- Ex 5: let's make a countdown for a rocket! Given a number, you
@@ -124,8 +125,10 @@ smallestDivisor :: Integer -> Integer
 smallestDivisor n = smallestDivisor' n 2
 
 smallestDivisor' :: Integer -> Integer -> Integer
-smallestDivisor' n k = if n `mod` k == 0 then k
-                                         else smallestDivisor' n (k + 1)
+smallestDivisor' n k =
+  if n `mod` k == 0
+    then k
+    else smallestDivisor' n (k + 1)
 
 ------------------------------------------------------------------------------
 -- Ex 7: implement a function isPrime that checks if the given number
@@ -133,6 +136,8 @@ smallestDivisor' n k = if n `mod` k == 0 then k
 --
 -- Ps. 0 and 1 are not prime numbers
 isPrime :: Integer -> Bool
+isPrime 0 = False
+isPrime 1 = False
 isPrime n = smallestDivisor n == n
 
 ------------------------------------------------------------------------------
@@ -147,4 +152,7 @@ isPrime n = smallestDivisor n == n
 --   biggestPrimeAtMost 3 ==> 3
 --   biggestPrimeAtMost 10 ==> 7
 biggestPrimeAtMost :: Integer -> Integer
-biggestPrimeAtMost = todo
+biggestPrimeAtMost n =
+  if isPrime n
+    then n
+    else biggestPrimeAtMost (n - 1)
