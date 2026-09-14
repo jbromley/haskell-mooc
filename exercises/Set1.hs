@@ -28,7 +28,7 @@ two = 2
 ------------------------------------------------------------------------------
 -- Ex 2: define the function double of type Integer->Integer. Double
 -- should take one argument and return it multiplied by two.
-Double :: Integer -> Integer
+double :: Integer -> Integer
 double x = 2 * x
 
 ------------------------------------------------------------------------------
