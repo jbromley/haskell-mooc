@@ -26,10 +26,9 @@ import Data.List
 --  maxBy length [1,2,3] [4,5]  ==>  [1,2,3]
 --  maxBy head   [1,2,3] [4,5]  ==>  [4,5]
 maxBy :: (a -> Int) -> a -> a -> a
-maxBy measure a b =
-  if measure a > measure b
-    then a
-    else b
+maxBy measure a b
+  | measure a > measure b = a
+  | otherwise = b
 
 ------------------------------------------------------------------------------
 -- Ex 2: implement the function mapMaybe that takes a function and a
@@ -40,7 +39,7 @@ maxBy measure a b =
 --   mapMaybe length Nothing      ==> Nothing
 --   mapMaybe length (Just "abc") ==> Just 3
 mapMaybe :: (a -> b) -> Maybe a -> Maybe b
-mapMaybe _f Nothing = Nothing
+mapMaybe f Nothing = Nothing
 mapMaybe f (Just x) = Just (f x)
 
 ------------------------------------------------------------------------------
@@ -133,10 +132,9 @@ powers k 0 = []
 powers k max = powers' k max [1]
 
 powers' :: Int -> Int -> [Int] -> [Int]
-powers' k max powers =
-  if nextValue > max
-    then reverse powers
-    else powers' k max (nextValue : powers)
+powers' k max powers
+  | nextValue > max = reverse powers
+  | otherwise = powers' k max (nextValue : powers)
   where
     nextValue = k * (head powers)
 
@@ -160,7 +158,9 @@ powers' k max powers =
 --   in while check tail "xyzAvvt"
 --     ==> Avvt
 while :: (a -> Bool) -> (a -> a) -> a -> a
-while check update value = todo
+while check update value
+  | check value = while check update (update value)
+  | otherwise = value
 
 ------------------------------------------------------------------------------
 -- Ex 8: another version of a while loop. This time, the check
