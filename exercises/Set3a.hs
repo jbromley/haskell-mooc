@@ -53,8 +53,8 @@ mapMaybe f (Just x) = Just (f x)
 --   mapMaybe2 div Nothing  (Just 3)  ==>  Nothing
 --   mapMaybe2 div (Just 6) Nothing   ==>  Nothing
 mapMaybe2 :: (a -> b -> c) -> Maybe a -> Maybe b -> Maybe c
-mapMaybe2 f Nothing y = Nothing
-mapMaybe2 f x Nothing = Nothing
+mapMaybe2 f Nothing _ = Nothing
+mapMaybe2 f _ Nothing = Nothing
 mapMaybe2 f (Just x) (Just y) = Just (f x y)
 
 ------------------------------------------------------------------------------
@@ -77,22 +77,14 @@ palindromeHalfs :: [String] -> [String]
 palindromeHalfs xs = map firstHalf (filter palindrome xs)
 
 firstHalf :: String -> String
-firstHalf s =
-  if even (length s)
-    then take numChars s
-    else take (numChars + 1) s
+firstHalf s
+  | even (length s) = take numChars s
+  | otherwise = take (numChars + 1) s
   where
     numChars = length s `div` 2
 
 palindrome :: String -> Bool
-palindrome s = palindrome' s (reverse s)
-
-palindrome' :: String -> String -> Bool
-palindrome' [] [] = True
-palindrome' (s1:restS1) (s2:restRs) =
-  if s1 == s2
-    then palindrome' restS1 restRs
-    else False
+palindrome s = s == (reverse s)
 
 ------------------------------------------------------------------------------
 -- Ex 5: Implement a function capitalize that takes in a string and
@@ -128,15 +120,7 @@ capitalizeFirst (c:cs) = (toUpper c) : cs
 --   * k^max > max
 --   * the function takeWhile
 powers :: Int -> Int -> [Int]
-powers k 0 = []
-powers k max = powers' k max [1]
-
-powers' :: Int -> Int -> [Int] -> [Int]
-powers' k max powers
-  | nextValue > max = reverse powers
-  | otherwise = powers' k max (nextValue : powers)
-  where
-    nextValue = k * (head powers)
+powers k max = takeWhile (<= max) (iterate (* k) 1)
 
 ------------------------------------------------------------------------------
 -- Ex 7: implement a functional while loop. While should be a function
@@ -179,7 +163,10 @@ while check update value
 --
 -- Hint! Remember the case-of expression from lecture 2.
 whileRight :: (a -> Either b a) -> a -> b
-whileRight check x = todo
+whileRight check x =
+  case check x of
+    Left x' -> x'
+    Right x' -> whileRight check x'
 
 -- for the whileRight examples:
 -- step k x doubles x if it's less than k
@@ -205,7 +192,7 @@ bomb x = Right (x - 1)
 --
 -- Hint! This is a great use for list comprehensions
 joinToLength :: Int -> [String] -> [String]
-joinToLength = todo
+joinToLength n l = [s | s1 <- l, s2 <- l, let s = s1 ++ s2, length s == n]
 
 ------------------------------------------------------------------------------
 -- Ex 10: implement the operator +|+ that returns a list with the first
@@ -218,6 +205,12 @@ joinToLength = todo
 --   [1,2,3] +|+ [4,5,6]  ==> [1,4]
 --   [] +|+ [True]        ==> [True]
 --   [] +|+ []            ==> []
+(+|+) :: [a] -> [a] -> [a]
+[] +|+ [] = []
+(x:_) +|+ [] = [x]
+[] +|+ (y:_) = [y]
+(x:_) +|+ (y:_) = [x, y]
+
 ------------------------------------------------------------------------------
 -- Ex 11: remember the lectureParticipants example from Lecture 2? We
 -- used a value of type [Either String Int] to store some measurements
