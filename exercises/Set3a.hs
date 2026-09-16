@@ -269,9 +269,8 @@ multiCompose (f:fs) = f . multiCompose fs
 --   multiApp concat [take 3, reverse] "race" ==> "racecar"
 --   multiApp id [head, (!!2), last] "axbxc" ==> ['a','b','c'] i.e. "abc"
 --   multiApp sum [head, (!!2), last] [1,9,2,9,3] ==> 6
--- multiApp :: (b -> c) -> [a -> b] -> (a -> c)
-multiApp f [] = f
-multiApp f fs = map f . map fs
+multiApp :: ([b] -> c) -> [a -> b] -> a -> c
+multiApp f fs x = f $ map ($ x) fs
 
 ------------------------------------------------------------------------------
 -- Ex 14: in this exercise you get to implement an interpreter for a
@@ -305,4 +304,15 @@ multiApp f fs = map f . map fs
 -- using (:). If you build the list in an argument to a helper
 -- function, the surprise won't work. See section 3.8 in the material.
 interpreter :: [String] -> [String]
-interpreter commands = todo
+interpreter commands = interpret commands [] 0 0
+  where
+    interpret [] results _ _ = reverse results
+    interpret (c:cs) results x y =
+      case c of
+        "up" -> interpret cs results x (y + 1)
+        "down" -> interpret cs results x (y - 1)
+        "left" -> interpret cs results (x - 1) y
+        "right" -> interpret cs results (x + 1) y
+        "printX" -> interpret cs (show x : results) x y
+        "printY" -> interpret cs (show y : results) x y
+        badCommand -> "bad command: " ++ badCommand
