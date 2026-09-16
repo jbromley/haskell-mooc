@@ -225,7 +225,14 @@ joinToLength n l = [s | s1 <- l, s2 <- l, let s = s1 ++ s2, length s == n]
 --   sumRights [Right 1, Left "bad value", Right 2]  ==>  3
 --   sumRights [Left "bad!", Left "missing"]         ==>  0
 sumRights :: [Either a Int] -> Int
-sumRights = todo
+sumRights [] = 0
+sumRights (x:xs) =
+  case x of
+    Left _ -> 0 + sumRights xs
+    Right n -> n + sumRights xs
+
+sumRights2 :: [Either a Int] -> Int
+sumRights2 xs = sum $ rights xs
 
 ------------------------------------------------------------------------------
 -- Ex 12: recall the binary function composition operation
@@ -240,7 +247,9 @@ sumRights = todo
 --   multiCompose [reverse, tail, (++"bar")] "foo" ==> "raboo"
 --   multiCompose [(3*), (2^), (+1)] 0 ==> 6
 --   multiCompose [(+1), (2^), (3*)] 0 ==> 2
-multiCompose fs = todo
+multiCompose :: [a -> a] -> a -> a
+multiCompose [] = id
+multiCompose (f:fs) = f . multiCompose fs
 
 ------------------------------------------------------------------------------
 -- Ex 13: let's consider another way to compose multiple functions. Given
@@ -260,7 +269,9 @@ multiCompose fs = todo
 --   multiApp concat [take 3, reverse] "race" ==> "racecar"
 --   multiApp id [head, (!!2), last] "axbxc" ==> ['a','b','c'] i.e. "abc"
 --   multiApp sum [head, (!!2), last] [1,9,2,9,3] ==> 6
-multiApp = todo
+-- multiApp :: (b -> c) -> [a -> b] -> (a -> c)
+multiApp f [] = f
+multiApp f fs = map f . map fs
 
 ------------------------------------------------------------------------------
 -- Ex 14: in this exercise you get to implement an interpreter for a
