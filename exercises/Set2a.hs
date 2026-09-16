@@ -30,10 +30,7 @@ years = [1982, 2004, 2020]
 --
 -- Hint! remember the take and drop functions.
 takeFinal :: Int -> [a] -> [a]
-takeFinal n xs =
-  if length xs > n
-    then drop (length xs - n) xs
-    else xs
+takeFinal n xs = drop (length xs - n) xs
 
 ------------------------------------------------------------------------------
 -- Ex 3: Update an element at a certain index in a list. More
@@ -87,7 +84,6 @@ isPalindrome str = str == (reverse str)
 --   palindromify "abracacabra" ==> "acaca"
 palindromify :: String -> String
 palindromify s
-  | null s = ""
   | isPalindrome s = s
   | otherwise = palindromify (take (length s - 2) (drop 1 s))
 
