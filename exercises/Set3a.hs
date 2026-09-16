@@ -304,15 +304,15 @@ multiApp f fs x = f $ map ($ x) fs
 -- using (:). If you build the list in an argument to a helper
 -- function, the surprise won't work. See section 3.8 in the material.
 interpreter :: [String] -> [String]
-interpreter commands = interpret commands [] 0 0
+interpreter commands = interpret commands 0 0
   where
-    interpret [] results _ _ = reverse results
-    interpret (c:cs) results x y =
+    interpret [] _ _ = []
+    interpret (c:cs) x y =
       case c of
-        "up" -> interpret cs results x (y + 1)
-        "down" -> interpret cs results x (y - 1)
-        "left" -> interpret cs results (x - 1) y
-        "right" -> interpret cs results (x + 1) y
-        "printX" -> interpret cs (show x : results) x y
-        "printY" -> interpret cs (show y : results) x y
-        badCommand -> "bad command: " ++ badCommand
+        "up" -> interpret cs x (y + 1)
+        "down" -> interpret cs x (y - 1)
+        "left" -> interpret cs (x - 1) y
+        "right" -> interpret cs (x + 1) y
+        "printX" -> show x : interpret cs x y
+        "printY" -> show y : interpret cs x y
+        badCommand -> ("bad command: " ++ badCommand) : interpret cs x y
