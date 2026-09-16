@@ -28,11 +28,10 @@ binomial n k
 --   oddFactorial 7 ==> 7*5*3*1 ==> 105
 --   oddFactorial 6 ==> 5*3*1 ==> 15
 oddFactorial :: Integer -> Integer
-oddFactorial 1 = 1
-oddFactorial n =
-  if odd n
-    then n * oddFactorial (n - 2)
-    else oddFactorial (n - 1)
+oddFactorial n
+  | n == 1 = 1
+  | odd n = n * oddFactorial (n - 2)
+  | otherwise = oddFactorial (n - 1)
 
 ------------------------------------------------------------------------------
 -- Ex 3: implement the Euclidean Algorithm for finding the greatest
@@ -63,12 +62,11 @@ oddFactorial n =
 -- Background reading:
 -- * https://en.wikipedia.org/wiki/Euclidean_algorithm
 myGcd :: Integer -> Integer -> Integer
-myGcd 0 b = b
-myGcd a 0 = a
-myGcd a b =
-  if a > b
-    then myGcd (a - b) b
-    else myGcd a (b - a)
+myGcd a b
+  | a == 0 = b
+  | b == 0 = a
+  | a > b = myGcd (a - b) b
+  | otherwise = myGcd a (b - a)
 
 ------------------------------------------------------------------------------
 -- Ex 4: Implement the function leftpad which adds space characters
@@ -83,10 +81,9 @@ myGcd a b =
 -- * you can combine strings with the ++ operator.
 -- * you can compute the length of a string with the length function
 leftpad :: String -> Int -> String
-leftpad s n =
-  if length s >= n
-    then s
-    else leftpad (" " ++ s) n
+leftpad s n
+  | length s >= n = s
+  | otherwise = leftpad (" " ++ s) n
 
 ------------------------------------------------------------------------------
 -- Ex 5: let's make a countdown for a rocket! Given a number, you
@@ -101,11 +98,8 @@ leftpad s n =
 -- * you can use the show function to convert a number into a string
 -- * you'll probably need a recursive helper function
 countdown :: Integer -> String
-countdown n = countdown' n "Ready! "
-
-countdown' :: Integer -> String -> String
-countdown' 0 s = s ++ "Liftoff!"
-countdown' n s = countdown' (n - 1) (s ++ show n ++ "... ")
+countdown n = "Ready! " ++ makeCount n ++ "Liftoff!"
+  where makeCount n = foldl (\count i -> count ++ (show i) ++ "... ") "" [n, n - 1..1]
 
 ------------------------------------------------------------------------------
 -- Ex 6: implement the function smallestDivisor that returns the
@@ -123,12 +117,7 @@ countdown' n s = countdown' (n - 1) (s ++ show n ++ "... ")
 -- Hint: remember the mod function!
 smallestDivisor :: Integer -> Integer
 smallestDivisor n = smallestDivisor' n 2
-
-smallestDivisor' :: Integer -> Integer -> Integer
-smallestDivisor' n k =
-  if n `mod` k == 0
-    then k
-    else smallestDivisor' n (k + 1)
+  where smallestDivisor' n k = if  n `mod` k == 0 then k else smallestDivisor' n (k + 1)
 
 ------------------------------------------------------------------------------
 -- Ex 7: implement a function isPrime that checks if the given number
@@ -136,9 +125,9 @@ smallestDivisor' n k =
 --
 -- Ps. 0 and 1 are not prime numbers
 isPrime :: Integer -> Bool
-isPrime 0 = False
-isPrime 1 = False
-isPrime n = smallestDivisor n == n
+isPrime n
+  | n < 2 = False
+  | otherwise = smallestDivisor n == n
 
 ------------------------------------------------------------------------------
 -- Ex 8: implement a function biggestPrimeAtMost that returns the
@@ -152,7 +141,6 @@ isPrime n = smallestDivisor n == n
 --   biggestPrimeAtMost 3 ==> 3
 --   biggestPrimeAtMost 10 ==> 7
 biggestPrimeAtMost :: Integer -> Integer
-biggestPrimeAtMost n =
-  if isPrime n
-    then n
-    else biggestPrimeAtMost (n - 1)
+biggestPrimeAtMost n
+  | isPrime n = n
+  | otherwise = biggestPrimeAtMost (n - 1)
