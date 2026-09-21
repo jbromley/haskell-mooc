@@ -103,7 +103,7 @@ sorted :: [Int] -> Bool
 sorted [] = True
 sorted (x:[]) = True
 sorted (x1:x2:xs)
-  | x1 <= x2 = sorted (x2:xs)
+  | x1 <= x2 = sorted (x2 : xs)
   | otherwise = False
 
 ------------------------------------------------------------------------------
@@ -115,7 +115,10 @@ sorted (x1:x2:xs)
 --
 -- Use pattern matching and recursion (and the list constructors : and [])
 sumsOf :: [Int] -> [Int]
-sumsOf [] = todo
+sumsOf xs = sumsOf' xs 0
+  where
+    sumsOf' [] curSum = []
+    sumsOf' (x:xs) curSum = x + curSum : sumsOf' xs (x + curSum)
 
 ------------------------------------------------------------------------------
 -- Ex 7: implement the function merge that merges two sorted lists of
@@ -129,7 +132,11 @@ sumsOf [] = todo
 --   merge [1,2,3,20] [7]  ==> [1,2,3,7,20]
 --   merge [1] [2,3,4,5,6] ==> [1,2,3,4,5,6]
 merge :: [Int] -> [Int] -> [Int]
-merge xs ys = todo
+merge [] ys = ys
+merge xs [] = xs
+merge (x:xs) (y:ys)
+  | x < y = x : merge xs (y : ys)
+  | otherwise = y : merge (x : xs) ys
 
 ------------------------------------------------------------------------------
 -- Ex 8: compute the biggest element, using a comparison function
@@ -152,7 +159,13 @@ merge xs ys = todo
 --   mymaximum (\(a,b) (c,d) -> b > d) ("",0) [("Banana",7),("Mouse",8)]
 --     ==> ("Mouse",8)
 mymaximum :: (a -> a -> Bool) -> a -> [a] -> a
-mymaximum bigger initial xs = todo
+mymaximum bigger initial [] = initial
+mymaximum bigger max (x:xs) = mymaximum bigger newMax xs
+  where
+    newMax =
+      if x `bigger` max
+        then x
+        else max
 
 ------------------------------------------------------------------------------
 -- Ex 9: define a version of map that takes a two-argument function
@@ -191,6 +204,7 @@ map2 f (a:as) (b:bs) = (f a b) : map2 f as bs
 --   ==> []
 maybeMap :: (a -> Maybe b) -> [a] -> [b]
 maybeMap f [] = []
-maybeMap f (x:xs) = case f x of
-  Nothing -> maybeMap f xs
-  Just b -> b : maybeMap f xs
+maybeMap f (x:xs) =
+  case f x of
+    Nothing -> maybeMap f xs
+    Just b -> b : maybeMap f xs
