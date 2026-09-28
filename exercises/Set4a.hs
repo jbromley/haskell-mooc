@@ -78,8 +78,8 @@ middle x y z = (sort [x, y, z]) !! 1
 -- Examples:
 --   rangeOf [4,2,1,3]          ==> 3
 --   rangeOf [1.5,1.0,1.1,1.2]  ==> 0.5
-rangeOf :: Num a => [a] -> a
-rangeOf = todo
+rangeOf :: (Num a, Ord a) => [a] -> a
+rangeOf xs = maximum xs - minimum xs
 
 ------------------------------------------------------------------------------
 -- Ex 5: given a (non-empty) list of (non-empty) lists, return the longest
@@ -96,6 +96,7 @@ rangeOf = todo
 -- Examples:
 --   longest [[1,2,3],[4,5],[6]] ==> [1,2,3]
 --   longest ["bcd","def","ab"] ==> "bcd"
+longest :: Ord a => [[a]] -> a
 longest = todo
 
 ------------------------------------------------------------------------------
