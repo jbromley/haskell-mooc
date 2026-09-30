@@ -158,7 +158,12 @@ average xs = sum xs / fromIntegral (length xs)
 --   winner (Map.fromList [("Mike",13607),("Bob",5899),("Lisa",5899)]) "Lisa" "Bob"
 --     ==> "Lisa"
 winner :: Map.Map String Int -> String -> String -> String
-winner scores player1 player2 = todo
+winner scores player1 player2
+  | score1 >= score2 = player1
+  | otherwise = player2
+  where
+    score1 = Map.findWithDefault 0 player1 scores
+    score2 = Map.findWithDefault 0 player2 scores
 
 ------------------------------------------------------------------------------
 -- Ex 9: compute how many times each value in the list occurs. Return
@@ -172,7 +177,10 @@ winner scores player1 player2 = todo
 --   freqs [False,False,False,True]
 --     ==> Map.fromList [(False,3),(True,1)]
 freqs :: (Eq a, Ord a) => [a] -> Map.Map a Int
-freqs xs = todo
+freqs xs = foldr updateFreqs emptyFreqs xs
+  where
+    emptyFreqs = Map.fromList ([])
+    updateFreqs x frqs = Map.insertWith (+) x 1 frqs
 
 ------------------------------------------------------------------------------
 -- Ex 10: recall the withdraw example from the course material. Write a
