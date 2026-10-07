@@ -161,7 +161,8 @@ cull val (Node x l r)
 --                             (Node 1 Empty Empty))
 --                     (Node 3 Empty Empty))   ==>   True
 isOrdered :: Ord a => Tree a -> Bool
-isOrdered = todo
+isOrdered Empty = True
+isOrdered (Node x l r) = allValues (< x) l && allValues (> x) r && isOrdered l && isOrdered r
 
 ------------------------------------------------------------------------------
 -- Ex 8: a path in a tree can be represented as a list of steps that
@@ -180,7 +181,10 @@ data Step
 --   walk [StepL] (Node 1 (Node 2 Empty Empty) Empty)  ==>  Just 2
 --   walk [StepL,StepL] (Node 1 (Node 2 Empty Empty) Empty)  ==>  Nothing
 walk :: [Step] -> Tree a -> Maybe a
-walk = todo
+walk _ Empty = Nothing
+walk [] (Node x _ _) = Just x
+walk (StepL:ss) (Node _ l _) = walk ss l
+walk (StepR:ss) (Node _ _ r) = walk ss r
 
 ------------------------------------------------------------------------------
 -- Ex 9: given a tree, a path and a value, set the value at the end of
