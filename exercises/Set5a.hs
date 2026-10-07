@@ -52,7 +52,7 @@ twoBananas = MkShoppingEntry "Banana" 1.1 2
 --   totalPrice threeApples  ==> 1.5
 --   totalPrice twoBananas   ==> 2.2
 totalPrice :: ShoppingEntry -> Double
-totalPrice (MkShoppingEntry _ price qty) = price * (fromIntegral qty)
+totalPrice (MkShoppingEntry _ price qty) = price * fromIntegral qty
 
 -- buyOneMore should increment the count in an entry by one
 --
@@ -163,29 +163,29 @@ study Freshman = NthYear 1
 -- get (tick (tick (toggle (tick zero))))
 --   ==> -1
 data UpDown
-  = UpCounter Int
-  | DownCounter Int
+  = Up Int
+  | Down Int
 
 -- zero is an increasing counter with value 0
 zero :: UpDown
-zero = UpCounter 0
+zero = Up 0
 
 -- get returns the counter value
 get :: UpDown -> Int
-get (UpCounter count) = count
-get (DownCounter count) = count
+get (Up n) = n
+get (Down n) = n
 
--- tick increases an increasing counter by one or decreases a
--- decreasing counter by one
+-- tick increases an increasing ner by one or decreases a
+-- decreasing ner by one
 tick :: UpDown -> UpDown
-tick (UpCounter count) = UpCounter (count + 1)
-tick (DownCounter count) = DownCounter (count - 1)
+tick (Up n) = Up (n + 1)
+tick (Down n) = Down (n - 1)
 
--- toggle changes an increasing counter into a decreasing counter and
+-- toggle changes an increasing ner into a decreasing ner and
 -- vice versa
 toggle :: UpDown -> UpDown
-toggle (UpCounter count) = DownCounter count
-toggle (DownCounter count) = UpCounter count
+toggle (Up n) = Down n
+toggle (Down n) = Up n
 
 ------------------------------------------------------------------------------
 -- Ex 8: you'll find a Color datatype below. It has the three basic
@@ -219,10 +219,10 @@ data Color
   deriving (Show)
 
 rgb :: Color -> [Double]
-rgb Red = [1.0, 0.0, 0.0]
-rgb Green = [0.0, 1.0, 0.0]
-rgb Blue = [0.0, 0.0, 1.0]
-rgb (Invert c) = map (1.0 -) (rgb c)
+rgb Red = [1, 0, 0]
+rgb Green = [0, 1, 0]
+rgb Blue = [0, 0, 1]
+rgb (Invert c) = map (1 -) (rgb c)
 rgb (Mix c1 c2) = zipWith (\x y -> (x + y) / 2) (rgb c1) (rgb c2)
 
 ------------------------------------------------------------------------------
@@ -266,7 +266,7 @@ toList (Pair k v kvs) = (k, v) : toList kvs
 
 fromList :: [(k, v)] -> KeyVals k v
 fromList [] = Empty
-fromList ((k, v):kvs) = Pair k v (fromList kvs)
+fromList ((k, v):kvs) = Pair k v $ fromList kvs
 
 ------------------------------------------------------------------------------
 -- Ex 11: The data type Nat is the so called Peano
