@@ -67,10 +67,12 @@ buyOneMore (MkShoppingEntry item price qty) = MkShoppingEntry item price (qty + 
 --
 -- Also define a Person value fred, and the functions getAge, getName,
 -- setAge and setName (see below).
-data Person = Person
-  { name :: String
-  , age :: Int
-  } deriving (Show)
+data Person =
+  Person
+    { name :: String
+    , age :: Int
+    }
+  deriving (Show)
 
 -- fred is a person whose name is Fred and age is 90
 fred :: Person
@@ -99,10 +101,11 @@ setAge age (Person name _) = Person name age
 -- Examples:
 --   getY (up (up origin))    ==> 2
 --   getX (up (right origin)) ==> 1
-data Position = Position
-  { x :: Int
-  , y :: Int
-  }
+data Position =
+  Position
+    { x :: Int
+    , y :: Int
+    }
 
 -- origin is a Position value with x and y set to 0
 origin :: Position
@@ -351,10 +354,20 @@ inc (O b) = I b
 inc (I b) = O (inc b)
 
 prettyPrint :: Bin -> String
-prettyPrint = todo
+prettyPrint = go ""
+  where
+    go acc End = acc
+    go acc (O otherDigits) = go ('0' : acc) otherDigits
+    go acc (I otherDigits) = go ('1' : acc) otherDigits
 
 fromBin :: Bin -> Int
-fromBin = todo
+fromBin End = 0
+fromBin (O otherDigits) = 2 * fromBin otherDigits
+fromBin (I otherDigits) = 2 * fromBin otherDigits + 1
 
 toBin :: Int -> Bin
-toBin = todo
+toBin 0 = O End
+toBin 1 = I End
+toBin n
+  | even n = O (toBin (n `div` 2))
+  | otherwise = I (toBin (n `div` 2))
