@@ -204,7 +204,10 @@ walk (StepR:ss) (Node _ _ r) = walk ss r
 --
 --   set [StepL,StepR] 1 (Node 0 Empty Empty)  ==>  (Node 0 Empty Empty)
 set :: [Step] -> a -> Tree a -> Tree a
-set path val tree = todo
+set _ _ Empty = Empty
+set [] val (Node _ l r) = Node val l r
+set (StepL:steps) val (Node x l r) = Node x (set steps val l) r
+set (StepR:steps) val (Node x l r) = Node x l (set steps val r)
 
 ------------------------------------------------------------------------------
 -- Ex 10: given a value and a tree, return a path that goes from the
@@ -219,4 +222,11 @@ set path val tree = todo
 --                            (Node 1 Empty Empty))
 --                    (Node 5 Empty Empty))                     ==>  Just [StepL,StepR]
 search :: Eq a => a -> Tree a -> Maybe [Step]
-search = todo
+search val Empty = Nothing
+search val (Node x l r)
+  | x == val = Just []
+  | otherwise = case search val l of
+      Just path -> Just (StepL : path)
+      Nothing -> case search val r of
+        Just path -> Just (StepR : path)
+        Nothing -> Nothing
