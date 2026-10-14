@@ -34,7 +34,7 @@ myMaximum [] = 0
 myMaximum (x:xs) = foldr maxHelper x xs
 
 maxHelper :: Int -> Int -> Int
-maxHelper x curMax = max x curMax
+maxHelper = max
 
 ------------------------------------------------------------------------------
 -- Ex 3: compute the sum and length of a list with a fold. Define
