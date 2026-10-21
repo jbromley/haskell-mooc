@@ -197,7 +197,7 @@ instance Num RationalNumber where
   abs (RationalNumber a b) = RationalNumber (abs a) b
   signum (RationalNumber a b) = RationalNumber (signum a) 1
   fromInteger x = RationalNumber x 1
-  negate (RationalNumber a b) = RationalNumber (0 - a) b
+  negate (RationalNumber a b) = RationalNumber (negate a) b
 
 ------------------------------------------------------------------------------
 -- Ex 11: a class for adding things. Define a class Addable with a
