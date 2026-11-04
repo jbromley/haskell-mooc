@@ -99,11 +99,25 @@ data Event
 
 data State
   = Start
+  | EggsAdded
+  | FlourAdded
+  | SugarAdded
+  | FlourAndSugarAdded
+  | Mixed
   | Error
   | Finished
   deriving (Eq, Show)
 
-step = todo
+step :: State -> Event -> State
+step Start AddEggs = EggsAdded
+step EggsAdded AddFlour = FlourAdded
+step EggsAdded AddSugar = SugarAdded
+step FlourAdded AddSugar = FlourAndSugarAdded
+step SugarAdded AddFlour = FlourAndSugarAdded
+step FlourAndSugarAdded Mix = Mixed
+step Mixed Bake = Finished
+step Finished _ = Finished
+step _ _ = Error
 
 -- do not edit this
 bake :: [Event] -> State
@@ -123,14 +137,16 @@ bake events = go Start events
 --   average (1.0 :| [])  ==>  1.0
 --   average (1.0 :| [2.0,3.0])  ==>  2.0
 average :: Fractional a => NonEmpty a -> a
-average = todo
+average (x :| xs) = sum (x : xs) / fromIntegral (length (x : xs))
 
 ------------------------------------------------------------------------------
 -- Ex 5: reverse a NonEmpty list.
 --
 -- PS. The Data.List.NonEmpty type has been imported for you
 reverseNonEmpty :: NonEmpty a -> NonEmpty a
-reverseNonEmpty = todo
+reverseNonEmpty (x :| xs) = foldl push (x :| []) xs
+  where
+    push (h :| t) e = e :| (h : t)
 
 ------------------------------------------------------------------------------
 -- Ex 6: implement Semigroup instances for the Distance, Time and
