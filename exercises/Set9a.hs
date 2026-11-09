@@ -200,7 +200,11 @@ instance Eq Text where
 --     compose [("a","alpha"),("b","beta"),("c","gamma")] [("alpha",1),("beta",2),("omicron",15)]
 --       ==> [("a",1),("b",2)]
 compose :: (Eq a, Eq b) => [(a, b)] -> [(b, c)] -> [(a, c)]
-compose = todo
+compose [] _ = []
+compose ((k, v):xs) ys =
+  case lookup v ys of
+    Just k2 -> (k, k2) : compose xs ys
+    Nothing -> compose xs ys
 
 ------------------------------------------------------------------------------
 -- Ex 9: Reorder a list using a list of indices.
