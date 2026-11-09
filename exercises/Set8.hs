@@ -172,8 +172,9 @@ dotAndLine = Picture f
 --          ["7f0000","ff7f7f","7f0000"],
 --          ["7f0000","7f0000","7f0000"]]
 blendColor :: Color -> Color -> Color
-blendColor (Color r1 g1 b1) (Color r2 g2 b2) =
-  Color ((r1 + r2) `div` 2) ((g1 + g2) `div` 2) ((b1 + b2) `div` 2)
+blendColor (Color r1 g1 b1) (Color r2 g2 b2) = Color (avg r1 r2) (avg g1 g2) (avg b1 b2)
+  where
+    avg x y = div (x + y) 2
 
 combine :: (Color -> Color -> Color) -> Picture -> Picture -> Picture
 combine f (Picture p1) (Picture p2) = Picture (\coord -> f (p1 coord) (p2 coord))
