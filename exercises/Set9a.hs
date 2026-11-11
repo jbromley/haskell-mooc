@@ -12,7 +12,6 @@ module Set9a where
 import Data.Char
 import Data.List
 import Data.Ord
-
 import Mooc.Todo
 
 ------------------------------------------------------------------------------
@@ -25,9 +24,11 @@ import Mooc.Todo
 -- Otherwise return "Ok."
 workload :: Int -> Int -> String
 workload nExercises hoursPerExercise
-  | nExercises * hoursPerExercise > 100 = "Holy moly!"
-  | nExercises * hoursPerExercise < 10 = "Piece of cake!"
+  | hours > 100 = "Holy moly!"
+  | hours < 10 = "Piece of cake!"
   | otherwise = "Ok."
+  where
+    hours = nExercises * hoursPerExercise
 
 ------------------------------------------------------------------------------
 -- Ex 2: Implement the function echo that builds a string like this:
@@ -42,6 +43,7 @@ echo :: String -> String
 echo "" = ""
 echo s = s ++ ", " ++ echo (drop 1 s)
 
+-- echo = concat . intersperse ", " . tails
 ------------------------------------------------------------------------------
 -- Ex 3: A country issues some banknotes. The banknotes have a serial
 -- number that can be used to check if the banknote is valid. For a
@@ -52,7 +54,7 @@ echo s = s ++ ", " ++ echo (drop 1 s)
 -- Given a list of bank note serial numbers (strings), count how many
 -- are valid.
 countValid :: [String] -> Int
-countValid ss = length . filter id $ map isValid ss
+countValid ss = length $ filter isValid ss
   where
     isValid s = s !! 2 == s !! 4 || s !! 3 == s !! 5
 
@@ -64,10 +66,10 @@ countValid ss = length . filter id $ map isValid ss
 --   repeated [1,2,3] ==> Nothing
 --   repeated [1,2,2,3,3] ==> Just 2
 --   repeated [1,2,1,2,3,3] ==> Just 3
-repeated :: Eq a => [a] -> Maybe a
+repeated :: (Eq a) => [a] -> Maybe a
 repeated [] = Nothing
-repeated (x:[]) = Nothing
-repeated (x1:x2:xs)
+repeated [x] = Nothing
+repeated (x1 : x2 : xs)
   | x1 == x2 = Just x1
   | otherwise = repeated (x2 : xs)
 
@@ -115,8 +117,8 @@ sumSuccess xs
 --   isOpen (open "0000" (changeCode "0000" aLock)) ==> False
 --   isOpen (open "0000" (lock (changeCode "0000" (open "1234" aLock)))) ==> True
 --   isOpen (open "1234" (lock (changeCode "0000" (open "1234" aLock)))) ==> False
-data Lock =
-  Lock String Bool
+data Lock
+  = Lock String Bool
   deriving (Show)
 
 -- aLock should be a locked lock with the code "1234"
@@ -125,7 +127,7 @@ aLock = Lock "1234" False
 
 -- isOpen returns True if the lock is open
 isOpen :: Lock -> Bool
-isOpen (Lock _ isOpen) = isOpen
+isOpen (Lock _ open) = open
 
 -- open tries to open the lock with the given code. If the code is
 -- wrong, nothing happens.
@@ -160,8 +162,8 @@ changeCode newCode l@(Lock code open)
 --   Text "a bc" == Text "ab  c\n"  ==> True
 --   Text "abc"  == Text "abcd"     ==> False
 --   Text "a bc" == Text "ab  d\n"  ==> False
-data Text =
-  Text String
+data Text
+  = Text String
   deriving (Show)
 
 instance Eq Text where
@@ -201,9 +203,9 @@ instance Eq Text where
 --       ==> [("a",1),("b",2)]
 compose :: (Eq a, Eq b) => [(a, b)] -> [(b, c)] -> [(a, c)]
 compose [] _ = []
-compose ((k, v):xs) ys =
+compose ((k, v) : xs) ys =
   case lookup v ys of
-    Just k2 -> (k, k2) : compose xs ys
+    Just v2 -> (k, v2) : compose xs ys
     Nothing -> compose xs ys
 
 ------------------------------------------------------------------------------
