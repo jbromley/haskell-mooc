@@ -385,7 +385,10 @@ backtrack (_:q2:qs) = nextCol q2 : qs
 --     step 8 [(5,1),(4,2),(3,5),(2,3),(1,1)] ==> [(6,1),(5,4),(4,2),(3,5),(2,3),(1,1)]
 --     step 8 [(6,1),(5,4),(4,2),(3,5),(2,3),(1,1)] ==> [(5,5),(4,2),(3,5),(2,3),(1,1)]
 step :: Size -> Stack -> Stack
-step = todo
+step n qs =
+  case fixFirst n qs of
+    Just qs' -> continue qs'
+    Nothing -> backtrack qs
 
 --------------------------------------------------------------------------------
 -- Ex 9: Let's solve our puzzle! The function finish takes a partial
@@ -399,7 +402,9 @@ step = todo
 -- After this, it's just a matter of calling `finish n [(1,1)]` to
 -- solve the n queens problem.
 finish :: Size -> Stack -> Stack
-finish = todo
+finish n qs
+  | length qs == n + 1 = drop 1 qs
+  | otherwise = finish n (step n qs)
 
 solve :: Size -> Stack
 solve n = finish n [(1, 1)]
