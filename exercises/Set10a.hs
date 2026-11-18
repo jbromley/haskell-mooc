@@ -72,13 +72,7 @@ deal ps cs = zipWith (,) cs (cycle ps)
 --   averages [3,2,1] ==> [3.0,2.5,2.0]
 --   take 10 (averages [1..]) ==> [1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5]
 averages :: [Double] -> [Double]
-averages = go 0 0
-  where
-    go _ _ [] = []
-    go total n (x:xs) = (total' / n') : go total' n' xs
-      where
-        total' = total + x
-        n' = n + 1
+averages xs = zipWith (/) (scanl1 (+) xs) [1..]
 
 ------------------------------------------------------------------------------
 -- Ex 5: Given two lists, xs and ys, and an element z, generate an
