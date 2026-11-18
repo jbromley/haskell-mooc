@@ -72,7 +72,13 @@ deal ps cs = zipWith (,) cs (cycle ps)
 --   averages [3,2,1] ==> [3.0,2.5,2.0]
 --   take 10 (averages [1..]) ==> [1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5]
 averages :: [Double] -> [Double]
-averages = todo
+averages = go 0 0
+  where
+    go _ _ [] = []
+    go total n (x:xs) = (total' / n') : go total' n' xs
+      where
+        total' = total + x
+        n' = n + 1
 
 ------------------------------------------------------------------------------
 -- Ex 5: Given two lists, xs and ys, and an element z, generate an
@@ -89,7 +95,7 @@ averages = todo
 --   take 20 (alternate "abc" "def" ',') ==> "abc,def,abc,def,abc,"
 --   take 10 (alternate [1,2] [3,4,5] 0) ==> [1,2,0,3,4,5,0,1,2,0]
 alternate :: [a] -> [a] -> a -> [a]
-alternate xs ys z = todo
+alternate xs ys z = cycle $ xs ++ [z] ++ ys ++ [z]
 
 ------------------------------------------------------------------------------
 -- Ex 6: Check if the length of a list is at least n. Make sure your
@@ -100,7 +106,15 @@ alternate xs ys z = todo
 --   lengthAtLeast 7 [1,2,3] ==> False
 --   lengthAtLeast 10 [0..]  ==> True
 lengthAtLeast :: Int -> [a] -> Bool
-lengthAtLeast = todo
+lengthAtLeast n = go n 0
+  where
+    go 0 0 [] = True
+    go _ _ [] = False
+    go n l (_:xs)
+      | l' >= n = True
+      | otherwise = go n l' xs
+      where
+        l' = l + 1
 
 ------------------------------------------------------------------------------
 -- Ex 7: The function chunks should take in a list, and a number n,
@@ -117,7 +131,12 @@ lengthAtLeast = todo
 --   chunks 2 [1,2,3,4] ==> [[1,2],[2,3],[3,4]]
 --   take 4 (chunks 3 [0..]) ==> [[0,1,2],[1,2,3],[2,3,4],[3,4,5]]
 chunks :: Int -> [a] -> [[a]]
-chunks = todo
+chunks n = go n
+  where
+    go n [] = []
+    go n ys@(x:xs)
+      | lengthAtLeast n ys = (take n ys) : go n xs
+      | otherwise = []
 
 ------------------------------------------------------------------------------
 -- Ex 8: Define a newtype called IgnoreCase, that wraps a value of
@@ -132,7 +151,14 @@ chunks = todo
 -- Examples:
 --   ignorecase "abC" == ignorecase "ABc"  ==>  True
 --   ignorecase "acC" == ignorecase "ABc"  ==>  False
-ignorecase = todo
+newtype IgnoreCase =
+  IgnoreCase String
+
+instance Eq IgnoreCase where
+  (IgnoreCase s1) == (IgnoreCase s2) = map Data.Char.toLower s1 == map Data.Char.toLower s2
+
+ignorecase :: String -> IgnoreCase
+ignorecase s = IgnoreCase s
 
 ------------------------------------------------------------------------------
 -- Ex 9: Here's the Room type and some helper functions from the
