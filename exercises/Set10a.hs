@@ -99,6 +99,7 @@ alternate xs ys z = cycle $ xs ++ [z] ++ ys ++ [z]
 --   lengthAtLeast 10 [0..]  ==> True
 lengthAtLeast :: Int -> [a] -> Bool
 lengthAtLeast n _ | n <= 0 = True
+lengthAtLeast _ [] = False
 lengthAtLeast n (_ : xs) = lengthAtLeast (n - 1) xs
 
 ------------------------------------------------------------------------------
@@ -185,5 +186,11 @@ play room (d : ds) =
     Nothing -> [describe room]
     Just r -> describe room : play r ds
 
+maze1 = Room "Maze" [("Left", maze2), ("Right", maze3)]
+
+maze2 = Room "Deeper in the maze" [("Left", maze3), ("Right", maze1)]
+
+maze3 = Room "Elsewhere in the maze" [("Left", maze1), ("Right", maze2)]
+
 maze :: Room
-maze = todo
+maze = maze1
