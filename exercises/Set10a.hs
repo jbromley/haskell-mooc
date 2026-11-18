@@ -2,7 +2,6 @@ module Set10a where
 
 import Data.Char
 import Data.List
-
 import Mooc.Todo
 
 ------------------------------------------------------------------------------
@@ -16,7 +15,7 @@ import Mooc.Todo
 --   take 10 (doublify [0..])  ==>  [0,0,1,1,2,2,3,3,4,4]
 doublify :: [a] -> [a]
 doublify [] = []
-doublify (x:xs) = x : x : doublify xs
+doublify (x : xs) = x : x : doublify xs
 
 ------------------------------------------------------------------------------
 -- Ex 2: Implement the function interleave that takes two lists and
@@ -36,10 +35,9 @@ doublify (x:xs) = x : x : doublify xs
 --   take 10 (interleave [7,7,7] [1..])    ==> [7,1,7,2,7,3,4,5,6,7]
 --   take 10 (interleave [1..] (repeat 0)) ==> [1,0,2,0,3,0,4,0,5,0]
 interleave :: [a] -> [a] -> [a]
-interleave [] [] = []
-interleave (x:xs) [] = x : interleave xs []
-interleave [] (y:ys) = y : interleave [] ys
-interleave (x:xs) (y:ys) = x : y : interleave xs ys
+interleave xs [] = xs
+interleave [] ys = ys
+interleave (x : xs) (y : ys) = x : y : interleave xs ys
 
 ------------------------------------------------------------------------------
 -- Ex 3: Deal out cards. Given a list of players (strings), and a list
@@ -72,7 +70,7 @@ deal ps cs = zipWith (,) cs (cycle ps)
 --   averages [3,2,1] ==> [3.0,2.5,2.0]
 --   take 10 (averages [1..]) ==> [1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5]
 averages :: [Double] -> [Double]
-averages xs = zipWith (/) (scanl1 (+) xs) [1..]
+averages xs = zipWith (/) (scanl1 (+) xs) [1 ..]
 
 ------------------------------------------------------------------------------
 -- Ex 5: Given two lists, xs and ys, and an element z, generate an
@@ -100,19 +98,12 @@ alternate xs ys z = cycle $ xs ++ [z] ++ ys ++ [z]
 --   lengthAtLeast 7 [1,2,3] ==> False
 --   lengthAtLeast 10 [0..]  ==> True
 lengthAtLeast :: Int -> [a] -> Bool
-lengthAtLeast n = go n 0
-  where
-    go 0 0 [] = True
-    go _ _ [] = False
-    go n l (_:xs)
-      | l' >= n = True
-      | otherwise = go n l' xs
-      where
-        l' = l + 1
+lengthAtLeast n _ | n <= 0 = True
+lengthAtLeast n (_ : xs) = lengthAtLeast (n - 1) xs
 
 ------------------------------------------------------------------------------
 -- Ex 7: The function chunks should take in a list, and a number n,
--- and return all sublists of length n of the original list. The
+-- and return all sublnnists of length n of the original list. The
 -- sublists should be in the order that they appear in the original
 -- list. A sublist means a slice, that is, a list of elements
 -- a,b,c,... that occur in the original list next to each other and in
@@ -125,12 +116,10 @@ lengthAtLeast n = go n 0
 --   chunks 2 [1,2,3,4] ==> [[1,2],[2,3],[3,4]]
 --   take 4 (chunks 3 [0..]) ==> [[0,1,2],[1,2,3],[2,3,4],[3,4,5]]
 chunks :: Int -> [a] -> [[a]]
-chunks n = go n
-  where
-    go n [] = []
-    go n ys@(x:xs)
-      | lengthAtLeast n ys = (take n ys) : go n xs
-      | otherwise = []
+chunks _ [] = []
+chunks n ys@(_ : xs)
+  | lengthAtLeast n ys = take n ys : chunks n xs
+  | otherwise = []
 
 ------------------------------------------------------------------------------
 -- Ex 8: Define a newtype called IgnoreCase, that wraps a value of
@@ -145,8 +134,8 @@ chunks n = go n
 -- Examples:
 --   ignorecase "abC" == ignorecase "ABc"  ==>  True
 --   ignorecase "acC" == ignorecase "ABc"  ==>  False
-newtype IgnoreCase =
-  IgnoreCase String
+newtype IgnoreCase
+  = IgnoreCase String
 
 instance Eq IgnoreCase where
   (IgnoreCase s1) == (IgnoreCase s2) = map Data.Char.toLower s1 == map Data.Char.toLower s2
@@ -177,8 +166,8 @@ ignorecase s = IgnoreCase s
 --      ==> ["Maze","Elsewhere in the maze","Deeper in the maze","Maze","Elsewhere in the maze"]
 --   play maze ["Left","Left","Right"]
 --      ==> ["Maze","Deeper in the maze","Elsewhere in the maze","Deeper in the maze"]
-data Room =
-  Room String [(String, Room)]
+data Room
+  = Room String [(String, Room)]
 
 -- Do not modify describe, move or play. The tests will use the
 -- original definitions of describe, move and play regardless of your
@@ -191,7 +180,7 @@ move (Room _ directions) direction = lookup direction directions
 
 play :: Room -> [String] -> [String]
 play room [] = [describe room]
-play room (d:ds) =
+play room (d : ds) =
   case move room d of
     Nothing -> [describe room]
     Just r -> describe room : play r ds
