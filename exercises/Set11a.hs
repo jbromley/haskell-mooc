@@ -81,7 +81,7 @@ readWords n = do
 readUntil :: (String -> Bool) -> IO [String]
 readUntil f = do
   w <- getLine
-  if (f w)
+  if f w
     then return []
     else do
       ws <- readUntil f
